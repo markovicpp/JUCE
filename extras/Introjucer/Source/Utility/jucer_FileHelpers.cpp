@@ -25,6 +25,24 @@
 #include "../jucer_Headers.h"
 #include "jucer_CodeHelpers.h"
 
+#if !JUCE_WINDOWS
+static String fixLineEndings (const String& s)
+{
+    StringArray lines;
+    lines.addLines (s);
+	
+    for (int i = 0; i < lines.size(); ++i)
+        lines.set (i, lines[i].trimEnd());
+	
+    while (lines.size() > 0 && lines [lines.size() - 1].trim().isEmpty())
+        lines.remove (lines.size() - 1);
+	
+    lines.add (String::empty);
+	
+    return lines.joinIntoString ("\n");
+}
+#endif
+
 
 //==============================================================================
 namespace FileHelpers
@@ -86,7 +104,12 @@ namespace FileHelpers
 
     bool overwriteFileWithNewDataIfDifferent (const File& file, const String& newData)
     {
+#if JUCE_WINDOWS
         const char* const utf8 = newData.toUTF8();
+#else
+		String fixedLineEndingsData = fixLineEndings(newData);
+		const char* const utf8 = fixedLineEndingsData.toUTF8();
+#endif
         return overwriteFileWithNewDataIfDifferent (file, utf8, strlen (utf8));
     }
 

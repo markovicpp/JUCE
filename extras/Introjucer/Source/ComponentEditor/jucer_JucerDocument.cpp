@@ -538,7 +538,11 @@ static String fixLineEndings (const String& s)
 
     lines.add (String::empty);
 
+#if JUCE_WINDOWS
     return lines.joinIntoString ("\r\n");
+#else
+    return lines.joinIntoString ("\n");
+#endif
 }
 
 bool JucerDocument::flushChangesToDocuments()

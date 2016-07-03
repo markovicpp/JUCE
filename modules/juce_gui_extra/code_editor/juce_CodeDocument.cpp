@@ -465,7 +465,11 @@ CodeDocument::CodeDocument()
       currentActionIndex (0),
       indexOfSavedState (-1),
       maximumLineLength (-1),
+#if JUCE_WINDOWS
       newLineChars ("\r\n")
+#else
+      newLineChars ("\n")
+#endif
 {
 }
 
